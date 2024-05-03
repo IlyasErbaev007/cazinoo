@@ -165,7 +165,7 @@ function saveBalanceToLocalStorage(balance) {
 // Функция для загрузки баланса из localStorage
 function loadBalanceFromLocalStorage() {
     const savedBalance = localStorage.getItem('balance');
-    return savedBalance ? parseInt(savedBalance) : 1000; // Возвращаем сохраненный баланс, если он есть, иначе 1000
+    return savedBalance ? parseInt(savedBalance) : 780000; // Возвращаем сохраненный баланс, если он есть, иначе 1000
 }
 
 // Обработка нажатия кнопок "Купить"
