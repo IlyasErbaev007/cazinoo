@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Казино</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css">
+</head>
+<body>
+<h1>Memory Card Game</h1>
+<div class="container" id="container"></div>
+<div class="balance-container">
+  <span>Баланс: <span id="balance">1000</span></span>
+</div>
+<style>
+    .balance-container {
+        position: absolute;
+        top: 250px;
+        left: 250px;
+        color: white;
+        font-size: 35px;
+        background: rgba(168,152,153,0.56);
+    }
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #bdc3c7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: sans-serif;
+  }
+
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 480px;
+    perspective: 1000px;
+  }
+
+  .card {
+    border: 2px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    margin: 10px;
+    height: 100px;
+    width: 100px;
+    transform-style: preserve-3d;
+    transform: rotateY(180deg);
+    transition: transform 0.4s linear;
+  }
+
+  .card.show {
+    transform: rotateY(0deg);
+  }
+
+  .card .front,
+  .card .back {
+    background-color: #fff;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .card .front {
+    z-index: 2;
+    transform: rotateY(0deg);
+  }
+
+  .card .back {
+    transform: rotateY(180deg);
+  }
+
+  .card i {
+    font-size: 28px;
+  }
+    @media (max-width:487px) {
+        .container {
+            width: 370px;
+        }
+        .balance-container {
+            top: 705px;
+        }
+    }
+
+</style>
+
+<script>
+  const containerEl = document.getElementById('container');
+  const CARDS_LENGTH = 16;
+  const cards = [];
+
+  let previousShownCard = undefined;
+
+  let icons = [
+    'air-freshener',
+    'palette',
+    'mug-hot',
+    'book',
+    'coins',
+    'igloo',
+    'cog',
+    'life-ring',
+  ];
+
+  // copy the icons again (double them)
+  icons.push(...icons);
+
+  // // shuffle the icons
+  for (let i = 0; i < 100; i++) {
+    const idx1 = Math.floor(Math.random() * icons.length);
+    const idx2 = Math.floor(Math.random() * icons.length);
+
+    const temp = icons[idx1];
+    icons[idx1] = icons[idx2];
+    icons[idx2] = temp;
+  }
+
+  for (let i = 0; i < CARDS_LENGTH; i++) {
+    const cardEl = document.createElement('div');
+    cardEl.classList.add('card');
+    cardEl.innerHTML = `
+            <div class="front">
+                <i class="fas fa-${icons[i]}"></i>
+            </div>
+            <div class="back"><small>Click me</small></div>
+        `;
+
+    cardEl.addEventListener('click', () => {
+      if (!cardEl.classList.contains('show')) {
+        cardEl.classList.add('show');
+
+        if (!previousShownCard) {
+          previousShownCard = cardEl;
+        } else {
+          const iconOne = previousShownCard.querySelector('i').classList[1];
+
+          const iconTwo = cardEl.querySelector('i').classList[1];
+
+          if (iconOne !== iconTwo) {
+            const temp = previousShownCard;
+            setTimeout(() => {
+              temp.classList.remove('show');
+              cardEl.classList.remove('show');
+            }, 1000);
+          }
+
+          previousShownCard = undefined;
+        }
+      }
+    });
+
+    cards.push(cardEl);
+
+    containerEl.appendChild(cardEl);
+  }
+
+</script>
+</body>
+</html>
